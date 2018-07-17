@@ -10,6 +10,24 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:text="我是pluginApp中的activityTwo" />
+
+    <Button
+        android:id="@+id/btn_startHost"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="插件调用宿主的activity" />
+
+    <Button
+        android:id="@+id/btn_startPlugin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="插件调用插件的activity" />
+
+    <Button
+        android:id="@+id/btn_sendBroadcast"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="发送广播" />
 
 </LinearLayout>

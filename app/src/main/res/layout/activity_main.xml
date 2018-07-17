@@ -7,10 +7,22 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-   <Button
-       android:id="@+id/btn_loadPlugin"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:text="加载plugin"
-       />
+    <Button
+        android:id="@+id/btn_loadPlugin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="加载plugin" />
+
+    <Button
+        android:id="@+id/btn_loadPlugin2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="加载plugin2" />
+
+    <Button
+        android:id="@+id/btn_sendBroadcast"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="发送插件中的广播" />
+
 </LinearLayout>

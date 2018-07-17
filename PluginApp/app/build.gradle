@@ -22,6 +22,9 @@ android {
 
 
 dependencies {
+    // the following aars are also compiled in host project, so they will be filterd when build plugin apk.
+    // but, wo can still visit their Class and Resources.
+    // 插件和宿主必须compile相同的aar
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:27.1.1'
     testImplementation 'junit:junit:4.12'
@@ -30,7 +33,7 @@ dependencies {
 }
 
 virtualApk {
-    packageId = 0x6f             // The package id of Resources.
-    targetHost='../../app' // The path of application module in host project.
-    applyHostMapping = true      // [Optional] Default value is true.
+    packageId = 0x6f             // 插件资源id，避免资源id冲突
+    targetHost='../../app'       // 插件app目录相对于宿主app目录的路径
+    applyHostMapping = true      // 默认为true，如果插件有引用宿主的类，那么这个选项可以使得插件和宿主保持混淆一致
 }
