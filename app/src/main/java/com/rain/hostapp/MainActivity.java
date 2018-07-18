@@ -15,20 +15,22 @@ import android.widget.Toast;
 import com.didi.virtualapk.PluginManager;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * 详情参见
  * https://github.com/didi/VirtualAPK/wiki/VirtualAPK-%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91%E6%8C%87%E5%8D%97
  * 该类主要用于host对plugin的测试
  * note
-    基本原理
-    合并宿主和插件的ClassLoader 需要注意的是，插件中的类不可以和宿主重复
-    合并插件和宿主的资源 重设插件资源的packageId，将插件资源和宿主资源合并
-    去除插件包对宿主的引用 构建时通过Gradle插件去除插件对宿主的代码以及资源的引用
+ * 基本原理
+ * 合并宿主和插件的ClassLoader 需要注意的是，插件中的类不可以和宿主重复
+ * 合并插件和宿主的资源 重设插件资源的packageId，将插件资源和宿主资源合并
+ * 去除插件包对宿主的引用 构建时通过Gradle插件去除插件对宿主的代码以及资源的引用
  */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final int REQUEST_CODE_WRITE = 341;
-    private static final String TAG  = "MainActivity";
+    private static final String TAG = "MainActivity";
+    private ArrayList<File> apks = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         findViewById(R.id.btn_loadPlugin).setOnClickListener(this);
         findViewById(R.id.btn_sendBroadcast).setOnClickListener(this);
+        findViewById(R.id.btn_loadPlugin2).setOnClickListener(this);
         if (hasPermission()) {
             loadPlugin();
         } else {
@@ -46,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void requestPermission() {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE_WRITE);
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_WRITE);
         }
     }
 
@@ -63,16 +66,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void loadPlugin() {
+        apks.clear();
         File file = new File(Environment.getExternalStorageDirectory(), "Test22.apk");
-        if (file.exists()) {
-            try {
-                PluginManager.getInstance(this).loadPlugin(file);
-            } catch (Exception e) {
-                e.printStackTrace();
+        File file2 = new File(Environment.getExternalStorageDirectory(), "Test33.apk");
+        apks.add(file);
+        apks.add(file2);
+        File apk = null;
+        for (int i = 0; i < apks.size(); i++) {
+            apk = apks.get(i);
+            if (apk.exists()) {
+                try {
+                    PluginManager.getInstance(this).loadPlugin(apk);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Toast.makeText(this, apk.getName()+"不存在", Toast.LENGTH_SHORT).show();
             }
-        } else {
-            Toast.makeText(this, "plugin不存在", Toast.LENGTH_SHORT).show();
         }
+
     }
 
     private boolean hasPermission() {
@@ -102,6 +114,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // wiki中关于广播的说明令人不解
                 Intent intent = new Intent("com.rain.pluginapp.mybroadcast");
                 sendBroadcast(intent);
+                break;
+
+            case R.id.btn_loadPlugin2:
+                Intent intent2 = new Intent();
+                intent2.setClassName(this, "com.rain.pluginapp2.Plugin2MainActivity");
+                startActivity(intent2);
                 break;
         }
     }
